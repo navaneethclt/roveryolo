@@ -59,14 +59,7 @@ Connect an Arduino and configure serial communication.
 Attach a LIDAR sensor and camera.
 Compile and Run:
 
-Build the code in an environment that supports the necessary libraries (e.g., Visual Studio).
-Run the program with the necessary command-line arguments:
-css
-Copy code
-./program.exe --model_path yolov5.onnx --image input.jpg --class_names coco.names --gpu
+
 Control:
 
 The system will process the camera feed and send control commands to the Arduino based on detected objects and LIDAR readings.
-Notes
-The code expects to operate on a real-time system and may not perform as expected on lower-priority settings.
-The LIDAR readings are processed to ensure smooth control of the system, while YOLO detects objects in real-time for decision-making.
