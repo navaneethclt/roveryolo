@@ -8,8 +8,12 @@ A low-pass Butterworth filter is applied to smooth sensor data, and serial commu
 The implementation includes:
 
 -Efficient data filtering for stable sensor readings.
+
 -Serial communication protocols for interfacing with the rover.
+
 -YOLO-based detection pipeline for robust object recognition and orientation adjustment.
+
 -Multi-threaded camera processing to optimize real-time performance.
+
 
 This system enhances autonomous navigation capabilities by integrating machine learning-driven perception with sensor fusion for precise state estimation and control.
