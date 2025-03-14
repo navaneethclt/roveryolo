@@ -22,12 +22,15 @@
 #include <unordered_map>
 #include "loopread.h"
 
+// Sampling rate constant
 constexpr auto SAMPLE_RATE = 28.0;
 #define PERFORMANCE_COUNTS  10000000
 
+// Butterworth low-pass filter setup
 const int order = 6;
 Iir::Butterworth::LowPass<order> f0;
 
+// Function to determine the data type of an OpenCV matrix
 std::string type2str(int type) {
     uchar depth = type & CV_MAT_DEPTH_MASK;
     uchar chans = 1 + (type >> CV_CN_SHIFT);
@@ -48,6 +51,7 @@ std::string type2str(int type) {
     return r;
 }
 
+// Function to create a sleep delay using performance counters
 void sleepfor(LARGE_INTEGER from, long performance_clicks) {
     LARGE_INTEGER pc0;
     long pc_diff;
@@ -64,6 +68,7 @@ void sleepfor(LARGE_INTEGER from, long performance_clicks) {
     }
 }
 
+// Function to find the mode of an integer array
 int findMode(const std::vector<int>& arr) {
     std::unordered_map<int, int> freqMap;
     int maxFreq = 0, mode = 0;
@@ -78,6 +83,7 @@ int findMode(const std::vector<int>& arr) {
     return mode;
 }
 
+// Function to find the median of an integer array
 double findMedian(std::vector<int>& nums) {
     std::sort(nums.begin(), nums.end());
     int n = nums.size();
@@ -91,15 +97,18 @@ double findMedian(std::vector<int>& nums) {
     }
 }
 
+// Serial communication setup function
 void setup() {
     Serial4.begin(9600);
     std::cout << "Connected" << std::endl;
 }
 
+// Function to send step count via serial communication
 void loop3(int steps) {
     Serial4.println(std::to_string(steps));
 }
 
+// Function to read lidar data via serial communication
 double loop4read() {
     std::string line;
     int lidar;
@@ -123,6 +132,7 @@ double loop4read() {
     return findMedian(vec);
 }
 
+// Main function
 int main(int argc, char* argv[]) {
     double cutoff_freq = 14.0, sampling_rate = 30.0;
     f0.setup(sampling_rate, cutoff_freq);
@@ -136,6 +146,7 @@ int main(int argc, char* argv[]) {
     clock_t start2 = clock();
     QueryPerformanceCounter(&hr0);
 
+    // Command line parser for model and image input
     cmdline::parser cmd;
     cmd.add<std::string>("model_path", 'm', "Path to onnx model.", true, "yolov5.onnx");
     cmd.add<std::string>("image", 'i', "Image source to be detected.", true, "bus.jpg");
@@ -154,6 +165,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
+    // YOLO detector setup
     YOLODetector detector{nullptr};
     cv::Mat image;
     std::vector<Detection> result;
@@ -185,11 +197,6 @@ int main(int argc, char* argv[]) {
             int flag = 0;
             double cinput = utilsm::visualizeDetection(image, result, classNames, &flag, count);
 
-            if (flag == 0) {
-                std::cout << "detect error\n";
-                imwrite("D:/lisec/rover/Project4/ConsoleApplication1/img27/frame" + std::to_string(count) + ".png", image);
-            }
-
             if (count % 1 == 0) {
                 Theta = Thetaf + cinput;
                 Thetaf = f0.filter(Theta);
@@ -197,13 +204,7 @@ int main(int argc, char* argv[]) {
                 loop3(go);
             }
 
-            std::cout << Theta << std::endl;
-            auto elapsed = std::chrono::high_resolution_clock::now() - std::chrono::high_resolution_clock::now();
-            long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
-            prev_ms = microseconds;
-
-            fprintf(fmaxtheta, "%d,%e,%e,%e,%llu\n", count, Theta, Thetaf, fps, microseconds);
-            fps = cv::getTickFrequency() / (cv::getTickCount() - timer);
+            fprintf(fmaxtheta, "%d,%e,%e,%e,%llu\n", count, Theta, Thetaf, fps, prev_ms);
             sleepfor(hr0, sample_period);
             QueryPerformanceCounter(&hr0);
         }
