@@ -1,4 +1,14 @@
 # Position Estimation of a Rover Robot using 1D Lidar and Computer Vision
-This project is an embedded application designed to perform real-time object detection and sensor data integration, using a YOLO model for detecting objects and a camera feed for image capture. The application processes data from sensors such as LIDAR through Arduino serial communication, applying a Butterworth low-pass filter to smooth sensor signals. It sends control signals based on the results of the object detection and sensor analysis. The system saves frames during the process for post-analysis and logs the sensor and control data to a CSV file for further review. The application requires a Windows OS due to its use of Windows-specific APIs for performance monitoring and process management, and it relies on OpenCV for image handling and manipulation. Additionally, an Arduino device is necessary for serial communication to read LIDAR data, and the YOLO object detection model is loaded in ONNX format. The program sets the process priority to real-time to maintain synchronization and performance, and it manages frame processing to maintain a stable frame rate. With the ability to read and control external hardware in real-time, the application is geared toward tasks requiring both object detection and sensor-based decision-making.
+This project involves developing a real-time position and yaw angle estimation system for a ROS-based rover, achieving 2 cm positional accuracy and 5-degree yaw angle accuracy using a low-cost camera and a 1D Garmin LIDAR-Lite-v3.
 
-YOLO is used for object detection and a motor is manipulated to control the lidar for pointing at the robot. 
+A YOLOv7-based object detection algorithm is implemented to enable active orientation control of the LIDAR, improving its measurement precision. The system processes real-time image data from a camera using OpenCV, detects objects with YOLOv7, and dynamically adjusts the LIDAR orientation based on detection results.
+
+A low-pass Butterworth filter is applied to smooth sensor data, and serial communication with an external microcontroller is managed via the ArduSerial interface. The software operates with real-time constraints on a Windows system, utilizing high-priority scheduling and performance counter-based timing control for consistent execution.
+
+The implementation includes:
+
+Efficient data filtering for stable sensor readings.
+Serial communication protocols for interfacing with the rover.
+YOLO-based detection pipeline for robust object recognition and orientation adjustment.
+Multi-threaded camera processing to optimize real-time performance.
+This system enhances autonomous navigation capabilities by integrating machine learning-driven perception with sensor fusion for precise state estimation and control.
