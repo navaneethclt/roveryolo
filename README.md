@@ -18,4 +18,4 @@ The implementation includes:
 
 This system enhances autonomous navigation capabilities by integrating machine learning-driven perception with sensor fusion for precise state estimation and control.
 
-https://youtu.be/mU6dCil4Ow4
+[![Watch the video](https://img.youtube.com/vi/mU6dCil4Ow4/0.jpg)](https://www.youtube.com/watch?v=mU6dCil4Ow4)
