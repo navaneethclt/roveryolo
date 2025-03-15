@@ -9,7 +9,7 @@ The implementation includes:
 
 -Efficient data filtering for stable sensor readings.
 
--Serial communication protocols for interfacing with the rover.
+-Serial communication protocols for interfacing with laser sensor.
 
 -YOLO-based detection pipeline for robust object recognition and orientation adjustment.
 
